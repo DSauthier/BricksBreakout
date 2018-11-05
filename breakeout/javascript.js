@@ -1,7 +1,7 @@
 canvas = document.getElementById("myCanvas");
 ctx = canvas.getContext("2d");
 
-// -=-=-=-=-=-==-=-variables -=-=----=-
+// -=-=-=-=-=-==-=-variable -=-=----=-
 
 let theGame;
 
@@ -12,28 +12,28 @@ var dx = 2;
 var dy = -2;
 
 // -=-=-=-=-=- for the collision detection -=-=-=-=
-var ballRadius = 10;
+let ballRadius = 10;
 
 // -=-=-=-=-= for the paddle -=-=-=-
-var paddleHeight = 10;
-var paddleWidth = 75;
-var paddleX = (canvas.width - paddleWidth) / 2;
-var rightPressed = false; /* is false bcause will only be true when clicked(called) */
-var leftPressed = false;
+let paddleHeight = 10;
+let paddleWidth = 75;
+let paddleX = (canvas.width - paddleWidth) / 2;
+let rightPressed = false; /* is false bcause will only be true when clicked(called) */
+let leftPressed = false;
 
 // -=-=-=--=-=- bricks build -=-=-==-
-var brickRowCount = 3;
-var brickColumnCount = 5;
-var brickWidth = 75;
-var brickHeight = 20;
-var brickPadding = 10;
-var brickOffsetTop = 30;
-var brickOffsetLeft = 30;
+let brickRowCount = 3;
+let brickColumnCount = 5;
+let brickWidth = 75;
+let brickHeight = 20;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft = 30;
 
-var bricks = [];
-for (var c = 0; c < brickColumnCount; c++) {
+let bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
-  for (var r = 0; r < brickRowCount; r++) {
+  for (let r = 0; r < brickRowCount; r++) {
     bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
@@ -46,11 +46,11 @@ for (var c = 0; c < brickColumnCount; c++) {
 // we can divide this operation into two. one drawing the actual ball, and the other drawing everything we need and creating the movement.
 //  inside of the draw() function we can call the drawBall function, or any other drawing function we want.
 function drawBricks() {
-  for (var c = 0; c < brickColumnCount; c++) {
-    for (var r = 0; r < brickRowCount; r++) {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
       if (bricks[c][r].status == 1) {
-        var brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-        var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+        let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+        let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
         bricks[c][r].x = brickX;
         bricks[c][r].y = brickY;
         ctx.beginPath();
@@ -65,7 +65,7 @@ function drawBricks() {
 
 function drawBall(){
   ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 2); /* the ballradius variable will make it easier to guarantee the same radius everytime */
+  ctx.arc(x, y, ballRadius, 0, Math.PI * 2); /* the ballradius letiable will make it easier to guarantee the same radius everytime */
   ctx.fillStyle = "#0095DD";
   ctx.fill();
   ctx.closePath();
@@ -117,7 +117,7 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 // -=-=-=-checking if the keys are being pressed-=-=-=-
-// the key down handler will make the boolean variables turn true, while the uphandler will turn them back off.
+// the key down handler will make the boolean variable turn true, while the uphandler will turn them back off.
 
 function keyDownHandler(e) {
   if (e.keyCode == 39) {
@@ -140,9 +140,9 @@ function keyUpHandler(e) {
 }
 
 function collisionDetection() {
-  for (var c = 0; c < brickColumnCount; c++) {
-    for (var r = 0; r < brickRowCount; r++) {
-      var b = bricks[c][r];
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      let b = bricks[c][r];
       if (b.status == 1) {
         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
           dy = -dy;
