@@ -1,0 +1,18 @@
+#myCanvas{
+  border: 2px solid purple;
+}
+
+.scoreDiv{
+      display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#bricksDestroyed{
+    padding: 0px 10px;
+
+}
+
+#playerBalls{
+  padding: 0px 10px;
+}
