@@ -9,11 +9,17 @@ let lives = 3;
 
 let theGame;
 
-// -=-==-=-for the draw function -=-=-
+// -=-==-=-for the drawBall function -=-=-
 let startingPositionX = canvas.width / 2;
 let startinPositionY = canvas.height - 30;
 let dx = Math.round(Math.random()) * 4 - 2;/* will send the ball in a random x angle position */
 let dy = -2;
+
+// -=-=-=-=-=-=-=- for the drawBall1 function -=-=-=-=-=-
+let newBallPosX = canvas.width / 2;
+let newBallPosY = canvas.height - 30;
+let rx = Math.round(Math.random()) * 3;/* will send the ball in a random x angle position */
+let ry = -3;
 
 // -=-=-=-=-=- for the collision detection -=-=-=-=
 let ballRadius = 10;
@@ -24,6 +30,8 @@ let paddleWidth = 150;
 let paddleX = (canvas.width - paddleWidth) / 2; /*starting position */
 let rightPressed = false; /* is false bcause will only be true when clicked(called) */
 let leftPressed = false;
+let spacePressed = false;
+let shiftPressed = false;
 
 // -=-=-=--=-=- bricks build -=-=-==-
 let brickRowCount = 8;
@@ -124,6 +132,14 @@ function drawBricks() {
     }
   }
 }
+function drawBall1() {
+  
+  ctx.beginPath();
+  ctx.arc(newBallPosX,newBallPosY,ballRadius,0, Math.PI * 2); /* the ballradius letiable will make it easier to guarantee the same radius everytime */
+  ctx.fillStyle = "red";
+  ctx.fill();
+  ctx.closePath();
+}
 
 function drawBall() {
   ctx.beginPath();
@@ -147,6 +163,9 @@ function draw() {
   drawPaddle();
   drawBricks();
   collisionDetection();
+  
+    drawBall1();
+  
 
   
   // -=-=-==-=--=collision detection for borders  -=-=-=-=-=--=
@@ -198,7 +217,12 @@ function draw() {
   else if (leftPressed && paddleX > 0) {
     paddleX -= 7;
   }
-
+  if(shiftPressed){
+    console.log("wowowoowowowowow")
+    
+  }
+  newBallPosX += rx;
+  newBallPosY += ry
   startingPositionX += dx;
   startinPositionY += dy;
 }
@@ -218,6 +242,9 @@ function keyDownHandler(e) {
     console.log("left pressed")
     leftPressed = true;
   }
+if(e.keyCode = 32){
+  spacePressed = true;
+}
 
 }
 
@@ -229,10 +256,13 @@ function keyUpHandler(e) {
     leftPressed = false;
   }
   if (e.keyCode == 32) {
-    console.log("space pressed");
     dx = dx - Math.floor(Math.random() * 5) / 2;
     dy = dy - Math.floor(Math.random()* 5) / 2;
-
+    spacePressed = false;
+  }
+  if (e.keyCode == 16) {
+    console.log("shift pressed")
+    drawBall();
   }
 }
 
@@ -250,7 +280,7 @@ function collisionDetection() {
           score = score+ 35
           // console.log(score);
           scoreBricks.innerHTML = score;
-          if (score == brickRowCount * brickColumnCount) {
+          if (score > 2799) {
             alert("YOU WIN, CONGRATULATIONS!");
             document.location.reload();
           
