@@ -141,12 +141,16 @@ function draw() {
   if (x + dx > canvas.width - ballRadius || x + dx < 0) { /* same logic for left and right, just using the X position(horizontal). The - BallRadius will let the ball bounce but without entering in its image(radius)  */
     dx = -dx;
   }
-  // -=-=-=-=-=-=-=- paddle movement drawing -=-=-=-=-=-=-
-  if (rightPressed && paddleX < canvas.width - paddleWidth) {
-    paddleX += 7;
-  }
-  else if (leftPressed && paddleX > 0) {
-    paddleX -= 7;
+
+  function paddleMovement (){
+
+    // -=-=-=-=-=-=-=- paddle movement drawing -=-=-=-=-=-=-
+    if (rightPressed && paddleX < canvas.width - paddleWidth) {
+      paddleX += 7;
+    }
+    else if (leftPressed && paddleX > 0) {
+      paddleX -= 7;
+    }
   }
 
   x += dx;

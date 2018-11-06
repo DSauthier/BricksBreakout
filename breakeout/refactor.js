@@ -9,17 +9,17 @@ let lives = 3;
 
 let theGame;
 
-// -=-==-=-for the drawBall function -=-=-
+// -=-==-=-for the regular drawBall function -=-=-
 let startingPositionX = canvas.width / 2;
-let startinPositionY = canvas.height - 30;
-let dx = Math.round(Math.random()) * 4 - 2;/* will send the ball in a random x angle position */
+let startingPositionY = canvas.height - 30;
+let dx = Math.round(Math.random()) * 4 - 1;/* will send the ball in a random x angle position */
 let dy = -2;
 
-// -=-=-=-=-=-=-=- for the drawBall1 function -=-=-=-=-=-
+// -=-=-=-=-=-=-=- for the special ball function -=-=-=-=-=-
 let newBallPosX = canvas.width / 2;
 let newBallPosY = canvas.height - 30;
-let rx = Math.round(Math.random()) * 3;/* will send the ball in a random x angle position */
-let ry = -3;
+let rx = (Math.random()) * 3 - 0.35;/* will send the ball in a random x angle position */
+let ry = -(Math.random()) * 3 - 0.35 ;
 
 // -=-=-=-=-=- for the collision detection -=-=-=-=
 let ballRadius = 10;
@@ -41,6 +41,10 @@ let brickHeight = 20;
 let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
+
+
+// -==-=-=-=--==-=-=-=-=- END OF VARIABLES -==-=-=--=-=-=-=-=-=-=
+
 // defining blue bricks grid =-=-=-=-=-=-=-=-=-=
 let bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
@@ -49,6 +53,8 @@ for (let c = 0; c < brickColumnCount; c++) {
     bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
+
+
 
 // defining green bricks grid -=-=-=-=-=--
 // let bricks = [];
@@ -132,8 +138,121 @@ function drawBricks() {
     }
   }
 }
-function drawBall1() {
+
+// -=-=-==--==--=regular ball =-=-=-=-=--=-=
+function regularBallCollision() {
+
+  if (startingPositionY + dy < ballRadius) { /* for top */
+    dy = -dy;
+  }
+  if (startingPositionY + dy > canvas.height - ballRadius) { /* if the y(vertical) position is bigger than the height of the canvas (bottom margin), y will be equal to the oposite value. the same goes for top margin */
+
+    if (startingPositionX > paddleX && startingPositionX < paddleX + paddleWidth) { /* paddle collision*/
+      console.log("paddle held")
+      dx = dx + 0.3;
+      dy = -dy - 0.3;
+    } else {
+      lives--;
+
+      playerLife.innerHTML = lives;
+
+
+      if (lives < 0) {
+        setTimeout(() => {
+          alert("GAME OVER");
+
+        }, 1);
+        document.location.reload();
+
+      }
+      else {
+        startingPositionX = canvas.width / 2;
+        startingPositionY = canvas.height - 30;
+        dx = Math.random() * 3;
+        dy = Math.random() * -3;
+        paddleX = (canvas.width - paddleWidth) / 2;
+      }
+    }
+  }
+  if (startingPositionX + dx > canvas.width - ballRadius || startingPositionX + dx < 0) { /* same logic for left and right, just using the X position(horizontal). The - BallRadius will let the ball bounce but without entering in its image(radius)  */
+    dx = -dx;
+  }
   
+
+  startingPositionX += dx;
+  startingPositionY += dy;
+}
+ // -==--=-=-=-=-=regular ball ends =--=-==-=-=--=-=-=-=-=
+
+// -=-=-==--==--=new ball =-=-=-=-=--=-=
+function createNewBallCollision(){
+    if (newBallPosY + ry < ballRadius) {
+      /* for top */
+      ry = -ry;
+    }
+    if (newBallPosY + ry > canvas.height - ballRadius) {
+      /* if the y(vertical) position is bigger than the height of the canvas (bottom margin), y will be equal to the oposite value. the same goes for top margin */
+
+      if (newBallPosX > paddleX && newBallPosX < paddleX + paddleWidth) {
+        /* paddle collision*/
+        console.log("paddle held");
+        rx = rx + 0.5;
+        ry = -ry - 0.5;
+      } else {
+        lives--;
+
+        playerLife.innerHTML = lives;
+
+        if (lives < 0) {
+          setTimeout(
+            () => {
+              alert(
+                "GAME OVER"
+              );
+            },
+            1
+          );
+          document.location.reload();
+        } else {
+          newBallPosX = canvas.width / 2;
+          newBallPosY = canvas.height - 30;
+          rx = Math.random() * 3;
+          ry = Math.random() * -3;
+          paddleX = (canvas.width - paddleWidth) / 2;
+        }
+      }
+    }
+    if (newBallPosX + rx > canvas.width - ballRadius || newBallPosX + rx < 0) {
+      /* same logic for left and right, just using the X position(horizontal). The - BallRadius will let the ball bounce but without entering in its image(radius)  */
+      rx = -rx;
+    }
+    // adding movement  to the balls;
+    newBallPosX += rx;
+    newBallPosY += ry;
+  }
+    // -==--=-=-=-=-=new ball ends =--=-==-=-=--=-=-=-=-=
+
+ 
+   // -=-=-=-=-=-=-=- paddle movement drawing -=-=-=-=-=-=-
+function paddleMovement() {
+
+  if (rightPressed && paddleX < canvas.width - paddleWidth) {
+    paddleX += 7;
+  }
+  else if (leftPressed && paddleX > 0) {
+    paddleX -= 7;
+  }
+  if (shiftPressed) {
+    console.log("wowowoowowowowow")
+
+  }
+}
+// -=-=-=-=-=-=--=-=draw special ball -=-=-=-=-=-=-
+function drawBall1() {
+  createNewBallCollision()
+  // if (shiftPressed === true) {
+  // }
+
   ctx.beginPath();
   ctx.arc(newBallPosX,newBallPosY,ballRadius,0, Math.PI * 2); /* the ballradius letiable will make it easier to guarantee the same radius everytime */
   ctx.fillStyle = "red";
@@ -141,9 +260,11 @@ function drawBall1() {
   ctx.closePath();
 }
 
+// -=-=-=-==-=-=--=-==- regular ball -=--=-=-=-==-
 function drawBall() {
+  regularBallCollision()
   ctx.beginPath();
-  ctx.arc(startingPositionX, startinPositionY, ballRadius, 0, Math.PI * 2); /* the ballradius letiable will make it easier to guarantee the same radius everytime */
+  ctx.arc(startingPositionX, startingPositionY, ballRadius, 0, Math.PI * 2); /* the ballradius letiable will make it easier to guarantee the same radius everytime */
   ctx.fillStyle = "black";
   ctx.fill();
   ctx.closePath();
@@ -157,75 +278,23 @@ function drawPaddle() {
   ctx.closePath();
 }
 
+//=-=-=-=-=--==-=-=-=-=--==- ENGINE WHERE EVERYTHING IS CALLED -=--=--==-=-=-=-=-=-=-=-=-
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  createNewBallCollision();
+  paddleMovement();
   drawBall();
   drawPaddle();
   drawBricks();
   collisionDetection();
-  
-    drawBall1();
-  
+  drawBall1();
+ 
 
-  
-  // -=-=-==-=--=collision detection for borders  -=-=-=-=-=--=
-  if (startinPositionY + dy < ballRadius) { /* for top */
-    dy = -dy;
-  }
-  if (startinPositionY + dy > canvas.height - ballRadius) { /* if the y(vertical) position is bigger than the height of the canvas (bottom margin), y will be equal to the oposite value. the same goes for top margin */
-    
-    if (startingPositionX > paddleX && startingPositionX < paddleX + paddleWidth) { /* paddle collision*/
-      console.log("paddle held")
-      dx = dx + 0.3;
-      dy = -dy - 0.3;
-    } else {
-      lives--;
-
-      playerLife.innerHTML = lives;
-
-      
-      if (lives < 0) {
-        setTimeout(() => {
-          alert("GAME OVER");
-          
-        }, 1);
-        document.location.reload();
-        
-      }
-      else {
-          startingPositionX = canvas.width / 2;
-          startinPositionY = canvas.height - 30;
-          dx = Math.random()* 3;
-          dy = Math.random() * -3;
-          paddleX = (canvas.width - paddleWidth) / 2;
-      }
-       
-      /* the ball keeps going , how to make it stop or disappear? */
-      // drawBall();
-      
-
-      // document.location.reload(); /* everytime u lose a life the page */
-    }
-  }
-  if (startingPositionX + dx > canvas.width - ballRadius || startingPositionX + dx < 0) { /* same logic for left and right, just using the X position(horizontal). The - BallRadius will let the ball bounce but without entering in its image(radius)  */
-    dx = -dx;
-  }
-  // -=-=-=-=-=-=-=- paddle movement drawing -=-=-=-=-=-=-
-  if (rightPressed && paddleX < canvas.width - paddleWidth) {
-    paddleX += 7;
-  }
-  else if (leftPressed && paddleX > 0) {
-    paddleX -= 7;
-  }
-  if(shiftPressed){
-    console.log("wowowoowowowowow")
-    
-  }
-  newBallPosX += rx;
-  newBallPosY += ry
-  startingPositionX += dx;
-  startinPositionY += dy;
 }
+// =-=--=-=-=-=-==-=-=-END OF ENGINE ==-=-=--=-==-=-=-=-=-=-
+
+// =--=-==--=-==--==-=-KEY HANDLERS BEGIN --=--=-==--=-=-=-=-=-=
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -266,45 +335,99 @@ function keyUpHandler(e) {
   }
 }
 
+// -==-=--==-=-=-=--= END OF KEY HANDLERS =--==--=-==--==-=-=--=
+
+// -==-=--=-=-=-==-COLLISION DETECTION =--==--=-==-=-=-=-
 
 function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
       let brick = bricks[c][r];
-      
-      if (brick.status >0 ) {
+
+      // regular bal -=-=-=-=-=-=-==--=-=-=
+      if (brick.status > 0) {
         // when it collides, with anything on the map, the ball posY will receive the opposite direction.
-        if (startingPositionX > brick.x && startingPositionX < brick.x + brickWidth && startinPositionY > brick.y && startinPositionY < brick.y + brickHeight) {
-          dy = -dy;
-          brick.status --;
-          score = score+ 35
-          // console.log(score);
-          scoreBricks.innerHTML = score;
-          if (score > 2799) {
-            alert("YOU WIN, CONGRATULATIONS!");
-            document.location.reload();
-          
-          // console.log(scoreBricks.innerHTML)
-        }
-      }
-      }
-      if(brick.status == 2){
-        if (startingPositionX > brick.x && startingPositionX < brick.x + brickWidth && startinPositionY > brick.y && startinPositionY < brick.y + brickHeight) {
+        if (startingPositionX > brick.x && startingPositionX < brick.x + brickWidth && startingPositionY > brick.y && startingPositionY < brick.y + brickHeight) {
           dy = -dy;
           brick.status--;
-          score++
-          // console.log(score);
-          scoreBricks.innerHTML = score;
-          // console.log(scoreBricks.innerHTML)
+          score = score + 45;
 
+          if (score > 899 && score < 902) {
+            console.log("life up");
+            lives++;
+            playerLife.innerHTML = lives;
+          }
+          if (score > 4499) {
+            setTimeout(() => {
+              
+              alert("YOU WIN, CONGRATULATIONS!");
+
+            }, 1);
+            document.location.reload();
+
+            // console.log(scoreBricks.innerHTML)
+          }
+          scoreBricks.innerHTML = score;
         }
 
+        // double tap on bricks function future
+        // if(brick.status == 2){
+        //   if (startingPositionX > brick.x && startingPositionX < brick.x + brickWidth && startingPositionY > brick.y && startingPositionY < brick.y + brickHeight) {
+        //     dy = -dy;
+        //     brick.status--;
+        //     score++
+        //     // console.log(score);
+        //     scoreBricks.innerHTML = score;
+        //     // console.log(scoreBricks.innerHTML)
+
+        //   }
+
+        // }
+
+        // -=-=-=-=-=-=-=-=--=-===--=-=second ball collision to bricks =-=-==-=-=-=--=
+
+        if (newBallPosX > brick.x && newBallPosX < brick.x + brickWidth && newBallPosY > brick.y && newBallPosY < brick.y + brickHeight) {
+          ry = -ry;
+          brick.status--;
+          score = score + 45;
+
+          if (score > 899 && score < 902) {
+            console.log("life up");
+            lives++;
+            playerLife.innerHTML = lives;
+          }
+          if (score > 4499) {
+            alert("YOU WIN, CONGRATULATIONS!");
+            document.location.reload();
+
+            // console.log(scoreBricks.innerHTML)
+          }
+          scoreBricks.innerHTML = score;
+        }
       }
     }
+    // double tap on bricks - future addition
+    // if (brick.status == 2) {
+    //   if (startingPositionX > brick.x && startingPositionX < brick.x + brickWidth && startingPositionY > brick.y && startingPositionY < brick.y + brickHeight) {
+    //     dy = -dy;
+    //     brick.status--;
+    //     score++
+    //     // console.log(score);
+    //     scoreBricks.innerHTML = score;
+    //     // console.log(scoreBricks.innerHTML)
+
+    //   }
+
+    // }
+
+      // 
+    // }
   }
 }
 
+// ==--=-==-=-=--==--= END OF COLLISION ENGINE ==-=-=-=-=-=-=--=
 
+// =--=-=-=-=-=-=-=-= FPS INTERVAL -=-=-==-=--==--=
 setInterval(draw, 10);
 
 
