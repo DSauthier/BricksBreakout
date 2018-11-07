@@ -7,14 +7,14 @@
 
 // special skills:
 /**
- curve ball
- extra ball
+ curve ball done
+ extra ball (need to be activated)
  shooting?
- high speed
- extra life
+ high speed need activation
+ extra life 
 
  animations:
- explosions
+ explosions 
  flashes
  paddle tecno mode
  */
