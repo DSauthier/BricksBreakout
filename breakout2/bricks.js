@@ -1,8 +1,6 @@
 let keysBeingPressed = [];
 let theGame;
 let lives;
-let playerLife = document.getElementById("playerBalls");
-console.log(playerLife.innerHTML)
 
 
 document.onkeydown = function (e) {
@@ -30,25 +28,34 @@ document.getElementById("game-start").onclick  = function() {
    $(this).addClass('move');
   theGame = new Game();
   
-  playerLife.innerHTML = lives
+  // playerLife.innerHTML = lives
  
 }
 
 class Game{
   constructor(){
+    let playerLife = document.getElementById("playerBalls");
+    let playerScore = document.getElementById("bricksDestroyed")
+    // console.log(playerLife.innerHTML)
     this.canvas = document.getElementById("myCanvas");
     this.ctx = this.canvas.getContext("2d");
     this.ball1 = new Ball();
     this.Paddle = new Paddle();
     this.bricks = new Brick();
     this.score = 0;
+    this.score = Number(playerScore.innerHTML)
     this.healthPoints = 10;
+    this.healthPoints = playerLife.innerHTML;
+
     
     this.arrayOfBricks = [];
-
-    setInterval(()=>{
-      this.drawEverything();
     
+    setInterval(()=>{
+      
+      playerLife.innerHTML = this.healthPoints;
+      playerScore.innerHTML = this.score;
+      this.drawEverything();
+      
 
 
     },10)
@@ -193,10 +200,10 @@ class Ball{
     if (this.startingPositionY + this.dy > this.canvas.height - 5){
       result = 2;
       setTimeout(() => {
-        score.healthPoints = score.healthPoints - 1 ;
+        theGame.healthPoints = theGame.healthPoints - 0.5 ;
         
       }, 2);
-      console.log(lives)
+ 
 
     }
     // -==--=-=-==-=-=-=-=-=--=ball bounce of bottom wall and lose a life -==-=--==-=--=
